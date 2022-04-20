@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
     public int verticalRayCounts = 4;
     float horizontalRaySpacing;
     float verticalRaySpacing;
+    public CollisionInfo collisionsMessage;
 
 
     // Start is called before the first frame update
@@ -32,6 +33,16 @@ public class PlayerController : MonoBehaviour
         public Vector2 bottomLeft, bottomRight, topLeft, topRight;
     }
 
+
+    public struct CollisionInfo
+    {
+        public bool bottom, top, left, right;
+
+        public void Reset()
+        {
+            bottom = top = left = right = false;
+        }
+    }
 
 
 
@@ -58,6 +69,11 @@ public class PlayerController : MonoBehaviour
             {
                 velocity.y = (hit.distance - playerSkinLayer)*directionY;
                 rayLength = hit.distance;
+
+                collisionsMessage.top = directionY == 1;
+                collisionsMessage.bottom = directionY == -1;
+
+
             }
 
 
@@ -86,6 +102,10 @@ public class PlayerController : MonoBehaviour
             {
                 velocity.x = (hit.distance - playerSkinLayer) * directionX;
                 rayLength = hit.distance;
+
+                collisionsMessage.right = directionX == 1;
+                collisionsMessage.left = directionX == -1;
+
             }
 
 
@@ -98,6 +118,7 @@ public class PlayerController : MonoBehaviour
     public void Move(Vector3 velocity)
     {
         UpdateOriginRayPosition();
+        collisionsMessage.Reset();
 
         if (velocity.x != 0) {
             DetectHorizontalCollisions(ref velocity);
@@ -138,6 +159,9 @@ public class PlayerController : MonoBehaviour
         originRays.topRight = new Vector2(playerBound.max.x, playerBound.max.y);
 
     }
+
+
+   
 
 
 }
